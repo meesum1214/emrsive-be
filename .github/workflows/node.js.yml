@@ -40,6 +40,7 @@ jobs:
           echo "DB=${{ secrets.DB }}" >> .env
           echo "DB_USER=${{ secrets.DB_USER }}" >> .env
           echo "DB_PORT=${{ secrets.DB_PORT }}" >> .env
+          echo "DIALECT=${{ secrets.DIALECT }}" >> .env
       
       - name: Reload PM2
         run: pm2 reload emrsive-backend
