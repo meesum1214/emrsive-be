@@ -1,5 +1,5 @@
 const express = require("express");
-const { addCartItem, getCartItems, deleteCartItem } = require("../services/cart-service");
+const { addCartItem, getCartItems, deleteCartItem, emptyCart } = require("../services/cart-service");
 const { isLoggedIn } = require("../middlewares/auth");
 const router = express.Router();
 
@@ -22,9 +22,19 @@ router.get("/get-cart-items/:user_id", isLoggedIn, (req, res) => {
         });
 });
 
-router.delete("/delete-cart-item/:cart_id", isLoggedIn, (req, res) => {
-    const { cart_id } = req.params;
+router.delete("/delete-cart-item/", isLoggedIn, (req, res) => {
+    const { cart_id } = req.query;
     deleteCartItem(cart_id)
+        .then((result) => res.status(result.status).send(result))
+        .catch((error) => {
+            console.log(error);
+            res.status(500).json({ message: "Something went wrong" });
+        });
+});
+
+router.delete("/all/", isLoggedIn, (req, res) => {
+    const { user_id } = req.query;
+    emptyCart(user_id)
         .then((result) => res.status(result.status).send(result))
         .catch((error) => {
             console.log(error);

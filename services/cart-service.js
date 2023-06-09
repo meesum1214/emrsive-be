@@ -139,8 +139,43 @@ const deleteCartItem = async (cartId) => {
     }
 };
 
+const emptyCart = async (userId) => {
+    try {
+        // check if cart item already exists
+        const cartItemExists = await db.cart.findAll({
+            where: {
+                user_id: userId,
+            },
+        });
+
+        if (cartItemExists.length == 0) {
+            return {
+                status: 400,
+                message: "Cart item does not exist",
+            };
+        }
+
+        // delete cart item
+        await db.cart.destroy({
+            where: {
+                user_id: userId,
+            },
+        });
+
+        return {
+            status: 200,
+            message: "Cart is now empty!",
+        };
+
+    } catch (error) {
+        console.log(error);
+        return { message: error.message || "Internal server error" };
+    }
+}
+
 module.exports = {
     addCartItem,
     getCartItems,
-    deleteCartItem
+    deleteCartItem,
+    emptyCart
 };
