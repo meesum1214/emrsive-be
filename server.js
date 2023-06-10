@@ -1,7 +1,7 @@
+require('dotenv').config()
 const express = require('express');
 const app = express();
-const port = 8080;
-require('dotenv').config()
+const port = process.env.DB_PORT|| 8080;
 
 // Body Parser
 const bodyParser = express.json();
