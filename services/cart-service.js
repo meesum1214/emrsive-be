@@ -57,7 +57,7 @@ const addCartItem = async (body) => {
 
     } catch (error) {
         console.log(error);
-        return { message: error.message || "Internal server error" };
+        return { message: error || "Internal server error" };
     }
 };
 
@@ -95,6 +95,7 @@ const getCartItems = async (userId) => {
 
         return {
             status: 200,
+            total: getCartItems.length,
             message: "Cart items fetched successfully",
             data: getCartItems,
         };
