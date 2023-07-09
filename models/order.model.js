@@ -6,7 +6,7 @@ module.exports = (sequelize, DataTypes) => {
             autoIncrement: true,
         },
         orderDetails: {
-            type: DataTypes.STRING(1000),
+            type: DataTypes.STRING(2500),
             allowNull: false,
             as: 'order_details'
         },
