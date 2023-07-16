@@ -151,6 +151,13 @@ const deleteOrder = async (orderId) => {
             };
         }
 
+        // Delete order details against order_id from order_details table first
+        await db.orderDetails.destroy({
+            where: {
+                order_id: orderId
+            }
+        });
+
         await db.order.destroy({
             where: {
                 id: orderId
