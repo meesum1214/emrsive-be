@@ -2,7 +2,16 @@ const db = require("../models");
 
 const createOrderDetail = async (order) => {
     try {
-        const newOrderDetail = await db.orderDetails.create(order);
+        const plan = await db.plans.findOne({
+            where: {
+                id: order.plan_id
+            }
+        });
+
+        const newOrderDetail = await db.orderDetails.create({
+            ...order,
+            description: plan.description,
+        });
 
         return {
             status: 200,

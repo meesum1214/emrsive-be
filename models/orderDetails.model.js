@@ -8,6 +8,10 @@ module.exports = (sequelize, DataTypes) => {
         status: {
             type: DataTypes.STRING(255),
             as: 'status'
+        },
+        description: {
+            type: DataTypes.STRING(),
+            as: 'description'
         }
     });
     return OrderDetails;
