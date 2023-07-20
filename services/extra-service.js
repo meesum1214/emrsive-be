@@ -20,36 +20,36 @@ const createRoles = async () => {
 const createPlans = async () => {
 
     let basicPlan = [
-        { content: '➡️ 5 Hot selling Products' },
-        { content: '➡️ Eye Catching Logo Design' },
-        { content: '➡️ Premium theme' },
-        { content: '➡️ Premium Apps' }
+        { content: '5 Hot selling Products' },
+        { content: 'Eye Catching Logo Design' },
+        { content: 'Premium theme' },
+        { content: 'Premium Apps' }
     ]
 
     let standardPlan = [
-        { content: '➡️ 10 Hot selling Products' },
-        { content: '➡️ Eye Catching Logo Design' },
-        { content: '➡️ Premium theme' },
-        { content: '➡️ Premium Apps + Plugins' },
-        { content: '➡️ Social Media Pages' },
-        { content: '➡️ Social Media Posts' },
-        { content: '➡️ Social Media Marketing' },
-        { content: '➡️ Premium Product Videos' },
+        { content: '10 Hot selling Products' },
+        { content: 'Eye Catching Logo Design' },
+        { content: 'Premium theme' },
+        { content: 'Premium Apps + Plugins' },
+        { content: 'Social Media Pages' },
+        { content: 'Social Media Posts' },
+        { content: 'Social Media Marketing' },
+        { content: 'Premium Product Videos' },
     ]
 
     let premiumPlan = [
-        { content: '➡️ 10 Hot selling Products' },
-        { content: '➡️ Eye Catching Logo Design' },
-        { content: '➡️ Premium theme' },
-        { content: '➡️ Premium Apps + Plugins' },
-        { content: '➡️ Social Media Pages' },
-        { content: '➡️ Social Media Posts' },
-        { content: '➡️ Social Media Marketing' },
-        { content: '➡️ Premium Product Videos' },
-        { content: '➡️ Content Writing' },
-        { content: '➡️ Website SEO' },
-        { content: '➡️ Private Email' },
-        { content: '➡️ Full Store Management' },
+        { content: '10 Hot selling Products' },
+        { content: 'Eye Catching Logo Design' },
+        { content: 'Premium theme' },
+        { content: 'Premium Apps + Plugins' },
+        { content: 'Social Media Pages' },
+        { content: 'Social Media Posts' },
+        { content: 'Social Media Marketing' },
+        { content: 'Premium Product Videos' },
+        { content: 'Content Writing' },
+        { content: 'Website SEO' },
+        { content: 'Private Email' },
+        { content: 'Full Store Management' },
     ]
 
     let plan = await db.plans.findAll();
