@@ -18,7 +18,7 @@ const routes = require("./routes");
 const { createRoles, createPlans } = require('./services/extra-service');
 app.use("/api", routes);
 
-db.sequelize.sync({ force: true, alter: true }).then(() => {
+db.sequelize.sync({ force: false, alter: true }).then(() => {
     console.log(">>>>> Synced");
     createRoles();
     createPlans();
