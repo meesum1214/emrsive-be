@@ -3,7 +3,6 @@ const express = require('express');
 const app = express();
 const port = process.env.DB_PORT|| 8080;
 
-
 // Body Parser
 const bodyParser = express.json();
 app.use(bodyParser);
@@ -18,7 +17,7 @@ const routes = require("./routes");
 const { createRoles, createPlans } = require('./services/extra-service');
 app.use("/api", routes);
 
-db.sequelize.sync({ force: false, alter: true }).then(() => {
+db.sequelize.sync({ force: false, alter: false }).then(() => {
     console.log(">>>>> Synced");
     createRoles();
     createPlans();
@@ -26,6 +25,12 @@ db.sequelize.sync({ force: false, alter: true }).then(() => {
 
 app.get('/', (req, res) => {
     res.json({ message: 'Welcome to the Emrsive Mobile Applications.' });
+});
+
+app.get('/roles', (req, res) => {
+    db.roles.findAll().then((result) => {
+        res.json(result);
+    });
 });
 
 app.listen(port, () => {

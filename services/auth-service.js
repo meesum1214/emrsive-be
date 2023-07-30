@@ -2,7 +2,7 @@ const db = require("../models");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
-const createUser = async (body) => {
+const  createUser = async (body) => {
     try {
         // check if user already exists
         const userExists = await db.user.findOne({
@@ -22,14 +22,14 @@ const createUser = async (body) => {
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(body.password, salt);
 
-        // gereate token
-        const token = jwt.sign({ email: body.email }, "emrsive-secret");
-
         // create user and inclute roles
         const user = await db.user.create({
             ...body,
             password: hashedPassword,
         });
+
+        // gereate token
+        const token = jwt.sign({ email: body.email, id: user.id }, "emrsive-secret");
 
         return {
             status: 200,
@@ -73,7 +73,7 @@ const userLogin = async (body) => {
         }
 
         // generate token
-        const token = jwt.sign({ email: body.email }, "emrsive-secret");
+        const token = jwt.sign({ email: body.email, id: user.id }, "emrsive-secret");
 
         return {
             status: 200,

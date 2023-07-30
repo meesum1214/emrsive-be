@@ -1,4 +1,6 @@
+const { Op } = require("sequelize");
 const db = require("../models");
+const moment = require("moment/moment");
 
 const createOrder = async (order) => {
     try {
@@ -68,9 +70,90 @@ const getOrders = async (userId) => {
     }
 };
 
-const getAllOrders = async () => {
+const getAllOrders = async (userId, value, page, limit) => {
     try {
+
+        const user = await db.user.findOne({
+            where: {
+                id: userId
+            }
+        });
+
+        // only admin can access this route
+        if (user.role_id !== 1) {
+            return {
+                status: 401,
+                message: "You are not authorized to access this route",
+            };
+        }
+
+        if (!page || !limit) {
+            return {
+                status: 400,
+                message: "Please provide all the required fields",
+            };
+        }
+
+        let clause = {
+            [Op.or]: [
+                {
+                    firstName: {
+                        [Op.like]: `${value}%`
+                    }
+                },
+                {
+                    lastName: {
+                        [Op.like]: `${value}%`
+                    }
+                },
+                {
+                    orderStatus: {
+                        [Op.like]: `${value}%`
+                    }
+                },
+                {
+                    orderPrice: {
+                        [Op.like]: `${value}%`
+                    }
+                },
+            ]
+        };
+
+        let whereClause;
+
+        // if value is not empty then search with value
+        if (value) {      
+            // if value is a valid date for format 'YYYY-MM-DD' then search with specific Date
+            if (moment(value, "YYYY-MM-DD", true).isValid()) {
+                value = moment(value).format("YYYY-MM-DD");
+                whereClause = {
+                    createdAt: {
+                        [Op.and]: [
+                            db.sequelize.where(db.sequelize.fn('strftime', '%Y-%m-%d', db.sequelize.col('order.createdAt')), value),
+                        ],
+                    }
+                };
+
+            // if value is a valid date for format 'YYYY-MM' then search with specific Month of year
+            } else if(moment(value, "YYYY-MM", true).isValid()) {
+                value = moment(value).format("YYYY-MM");
+                whereClause = {
+                    createdAt: {
+                        [Op.and]: [
+                            db.sequelize.where(db.sequelize.fn('strftime', '%Y-%m', db.sequelize.col('order.createdAt')), value),
+                        ],
+                    }
+                };
+
+                // if value is a string then search with firstName, lastName, orderStatus, orderPrice
+            } else {
+                whereClause = clause;
+            }
+        }
+
         const orders = await db.order.findAll({
+            where: whereClause,
+            // raw: true,
             include: [
                 {
                     model: db.user,
@@ -85,12 +168,15 @@ const getAllOrders = async () => {
             ],
             attributes: {
                 exclude: ["updatedAt", "user_id"]
-            }
+            },
+            limit,
+            offset: (page - 1) * limit
         });
 
         return {
             status: 200,
             message: "Orders fetched successfully",
+            totalItems: orders.length,
             data: orders
         };
 

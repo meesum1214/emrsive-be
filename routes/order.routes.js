@@ -23,7 +23,8 @@ router.get("/get/:userId", isLoggedIn, (req, res) => {
 });
 
 router.get("/getall/", isLoggedIn, (req, res) => {
-    getAllOrders()
+    const { value, page, limit } = req.query;
+    getAllOrders(req.jwt.id, value, page, limit)
         .then((result) => res.status(result.status).send(result))
         .catch((error) => {
             console.log(error);

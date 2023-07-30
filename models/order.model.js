@@ -58,6 +58,9 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING(255),
             as: 'order_status'
         },
+        date: {
+            type: DataTypes.STRING(255),
+        }
     });
     return Order;
 }

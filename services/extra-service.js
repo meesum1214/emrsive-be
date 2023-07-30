@@ -2,19 +2,21 @@ const db = require("../models");
 
 const createRoles = async () => {
 
-    let role = await db.roles.findAll();
+    let role = await db.roles.findAll({ raw: true });
 
-    if (role.length > 0) {
-        console.log("===========>> Roles already created")
-        return;
+    // console.log(role)
+
+    if (role.length === 0) {
+        // console.log("creating roles")
+        db.roles.create({
+            name: "admin",
+        });
+        db.roles.create({
+            name: "user",
+        });
     }
 
-    db.roles.create({
-        name: "admin",
-    });
-    db.roles.create({
-        name: "user",
-    });
+    console.log("===========>> Roles already created")
 }
 
 const createPlans = async () => {
@@ -52,30 +54,31 @@ const createPlans = async () => {
         { content: 'Full Store Management' },
     ]
 
-    let plan = await db.plans.findAll();
+    let plan = await db.plans.findAll({raw: true});
 
-    if (plan.length > 0) {
-        console.log("===========>> Plans already created")
-        return;
+    // console.log(plan)
+
+    if (plan.length === 0) {
+        await db.plans.create({
+            name: "Basic",
+            price: 495,
+            description: `${JSON.stringify(basicPlan)}`,
+        });
+
+        await db.plans.create({
+            name: "Standard",
+            price: 1495,
+            description: `${JSON.stringify(standardPlan)}`,
+        });
+
+        await db.plans.create({
+            name: "Premium",
+            price: 2495,
+            description: `${JSON.stringify(premiumPlan)}`,
+        });
     }
 
-    await db.plans.create({
-        name: "Basic",
-        price: 495,
-        description: `${JSON.stringify(basicPlan)}`,
-    });
-
-    await db.plans.create({
-        name: "Standard",
-        price: 1495,
-        description: `${JSON.stringify(standardPlan)}`,
-    });
-
-    await db.plans.create({
-        name: "Premium",
-        price: 2495,
-        description: `${JSON.stringify(premiumPlan)}`,
-    });
+    console.log("===========>> Plans already created")
 }
 
 module.exports = {
