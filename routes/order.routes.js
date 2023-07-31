@@ -1,6 +1,6 @@
 const express = require("express");
 const { isLoggedIn } = require("../middlewares/auth");
-const { createOrder, getOrders, getAllOrders, updateOrder, deleteOrder } = require("../services/order-service");
+const { createOrder, getOrders, getAllOrders, updateOrder, deleteOrder, getByPlanId } = require("../services/order-service");
 const router = express.Router();
 
 router.post("/create/", isLoggedIn, (req, res) => {
@@ -25,6 +25,16 @@ router.get("/get/:userId", isLoggedIn, (req, res) => {
 router.get("/getall/", isLoggedIn, (req, res) => {
     const { value, page, limit } = req.query;
     getAllOrders(req.jwt.id, value, page, limit)
+        .then((result) => res.status(result.status).send(result))
+        .catch((error) => {
+            console.log(error);
+            res.status(500).json({ message: "Something went wrong" });
+        });
+});
+
+router.get("/byplan/", isLoggedIn, (req, res) => {
+    const { planId, page, limit } = req.query;
+    getByPlanId(req.jwt.id, planId, page, limit)
         .then((result) => res.status(result.status).send(result))
         .catch((error) => {
             console.log(error);

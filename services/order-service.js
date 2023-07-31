@@ -173,10 +173,19 @@ const getAllOrders = async (userId, value, page, limit) => {
             offset: (page - 1) * limit
         });
 
+        // total items
+        const totalItems = await db.order.count({
+            where: whereClause
+        });
+
+        // total pages
+        const totalPages = Math.ceil(totalItems / limit);
+
         return {
             status: 200,
             message: "Orders fetched successfully",
-            totalItems: orders.length,
+            totalItems,
+            totalPages,
             data: orders
         };
 
@@ -185,6 +194,96 @@ const getAllOrders = async (userId, value, page, limit) => {
         return { message: error.message || "Internal server error" };
     }
 };
+
+const getByPlanId = async (userId, planId, page, limit) => {
+    try {
+        const user = await db.user.findOne({
+            where: {
+                id: userId
+            }
+        });
+
+        // only admin can access this route
+        if (user.role_id !== 1) {
+            return {
+                status: 401,
+                message: "You are not authorized to access this route",
+            };
+        }
+
+        if (!page || !limit) {
+            return {
+                status: 400,
+                message: "Please provide all the required fields",
+            };
+        }
+
+        const orders = await db.orderDetails.findAll({
+            where: {
+                plan_id: planId
+            },
+            attributes: {
+                exclude: ["updatedAt", "plan_id"]
+            },
+        });
+
+        let allOrderIds = [];
+
+        for(let i = 0; i < orders.length; i++) {
+            allOrderIds = [...allOrderIds, orders[i].order_id];
+        }
+
+        const allOrders = await db.order.findAll({
+            where: {
+                id: {
+                    [Op.in]: allOrderIds
+                }
+            },
+            include: [
+                {
+                    model: db.user,
+                    attributes: ["id", "firstName", "lastName", "email"],
+                    include: [
+                        {
+                            model: db.roles,
+                            attributes: ["id", "name"]
+                        }
+                    ]
+                }
+            ],
+            attributes: {
+                exclude: ["updatedAt", "user_id"]
+            },
+            limit,
+            offset: (page - 1) * limit
+        });
+
+        // total items
+        const totalItems = await db.order.count({
+            where: {
+                id: {
+                    [Op.in]: allOrderIds
+                }
+            }
+        });
+
+        // total pages
+        const totalPages = Math.ceil(totalItems / limit);
+
+        return {
+            status: 200,
+            message: "Orders fetched successfully",
+            totalItems,
+            totalPages,
+            data: allOrders
+        };
+        
+    } catch (error) {
+        console.log(error);
+        return { message: error.message || "Internal server error" };
+    }
+};
+            
 
 const updateOrder = async (orderId, body) => {
     try {
@@ -266,5 +365,6 @@ module.exports = {
     getOrders,
     getAllOrders,
     updateOrder,
-    deleteOrder
+    deleteOrder,
+    getByPlanId
 };
