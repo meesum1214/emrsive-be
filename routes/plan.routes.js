@@ -1,9 +1,8 @@
 const express = require("express");
 const router = express.Router();
-const { isLoggedIn } = require("../middlewares/auth");
 const { getAllPlans, createPlan, deletePlan, updatePlan } = require("../services/plan-service");
 
-router.get("/getall", isLoggedIn, (req, res) => {
+router.get("/getall", (req, res) => {
     getAllPlans()
         .then((result) => res.status(result.status).send(result))
         .catch((error) => {
@@ -12,7 +11,7 @@ router.get("/getall", isLoggedIn, (req, res) => {
         });
 });
 
-router.post("/create-plan", isLoggedIn, (req, res) => {
+router.post("/create-plan", (req, res) => {
     createPlan(req.body)
         .then((result) => res.status(result.status).send(result))
         .catch((error) => {
@@ -21,7 +20,7 @@ router.post("/create-plan", isLoggedIn, (req, res) => {
         });
 });
 
-router.delete("/delete-plan/:planId", isLoggedIn, (req, res) => {
+router.delete("/delete-plan/:planId", (req, res) => {
     const { planId } = req.params;
     deletePlan(planId)
         .then((result) => res.status(result.status).send(result))
@@ -31,7 +30,7 @@ router.delete("/delete-plan/:planId", isLoggedIn, (req, res) => {
         });
 });
 
-router.patch("/update-plan/:planId", isLoggedIn, (req, res) => {
+router.patch("/update-plan/:planId", (req, res) => {
     const { planId } = req.params;
     updatePlan(planId, req.body)
         .then((result) => res.status(result.status).send(result))

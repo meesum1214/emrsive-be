@@ -1,9 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const { getAllUser, editUser, getUser, deleteUser } = require("../services/user-service");
-const { isLoggedIn } = require("../middlewares/auth");
 
-router.get("/getall", isLoggedIn, (req, res) => {
+router.get("/getall", (req, res) => {
     getAllUser()
         .then((result) => res.status(result.status).send(result))
         .catch((error) => {
@@ -12,7 +11,7 @@ router.get("/getall", isLoggedIn, (req, res) => {
         });
 });
 
-router.get("/getuser/:userId", isLoggedIn, (req, res) => {
+router.get("/getuser/:userId", (req, res) => {
     const { userId } = req.params;
     getUser(userId)
         .then((result) => res.status(result.status).send(result))
@@ -22,7 +21,7 @@ router.get("/getuser/:userId", isLoggedIn, (req, res) => {
         });
 });
 
-router.patch("/edit-users/:userId", isLoggedIn, (req, res) => {
+router.patch("/edit-users/:userId", (req, res) => {
     const { userId } = req.params;
     editUser(userId, req.body)
         .then((result) => res.status(result.status).send(result))
@@ -32,7 +31,7 @@ router.patch("/edit-users/:userId", isLoggedIn, (req, res) => {
         });
 });
 
-router.delete("/:userId", isLoggedIn, (req, res) => {
+router.delete("/:userId", (req, res) => {
     const { userId } = req.params;
     deleteUser(userId)
         .then((result) => res.status(result.status).send(result))

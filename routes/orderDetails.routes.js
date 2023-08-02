@@ -1,9 +1,8 @@
 const express = require("express");
-const { isLoggedIn } = require("../middlewares/auth");
 const { createOrderDetail, updateOrderDetail, getOrderDetails, deleteOrderDetails } = require("../services/orderDetails-service");
 const router = express.Router();
 
-router.post("/", isLoggedIn, (req, res) => {
+router.post("/", (req, res) => {
     createOrderDetail(req.body)
         .then((result) => res.status(result.status).send(result))
         .catch((error) => {
@@ -12,7 +11,7 @@ router.post("/", isLoggedIn, (req, res) => {
         });
 });
 
-router.patch("/:detail_id", isLoggedIn, (req, res) => {
+router.patch("/:detail_id", (req, res) => {
     const { detail_id } = req.params;
     updateOrderDetail(req.body, detail_id)
         .then((result) => res.status(result.status).send(result))
@@ -22,7 +21,7 @@ router.patch("/:detail_id", isLoggedIn, (req, res) => {
         });
 });
 
-router.get("/:order_id", isLoggedIn, (req, res) => {
+router.get("/:order_id", (req, res) => {
     const { order_id } = req.params;
     getOrderDetails(order_id)
         .then((result) => res.status(result.status).send(result))
@@ -32,7 +31,7 @@ router.get("/:order_id", isLoggedIn, (req, res) => {
         });
 });
 
-router.delete("/:detail_id", isLoggedIn, (req, res) => {
+router.delete("/:detail_id", (req, res) => {
     const { detail_id } = req.params;
     deleteOrderDetails(detail_id)
         .then((result) => res.status(result.status).send(result))
