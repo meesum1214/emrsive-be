@@ -31,6 +31,19 @@ app.get('/roles', (req, res) => {
     db.roles.findAll().then((result) => {
         res.json(result);
     });
+
+    // db.user.update({ role_id: 1, Role: "admin" }, {
+    //     where: {
+    //         id: 1
+    //     }
+    // })
+
+    // db.user.update({ role_id: 2, Role: "user" }, {
+    //     where: {
+    //         id: 2
+    //     }
+    // })
+        
 });
 
 app.listen(port, () => {

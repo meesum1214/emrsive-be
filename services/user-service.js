@@ -3,9 +3,9 @@ const db = require("../models");
 const getAllUser = async () => {
     try {
         const users = await db.user.findAll({
-            attributes: {
-                exclude: ["createdAt", "updatedAt", "role_id"],
-            },
+            // attributes: {
+            //     exclude: ["createdAt", "updatedAt", "role_id"],
+            // },
             include: [
                 {
                     model: db.roles,

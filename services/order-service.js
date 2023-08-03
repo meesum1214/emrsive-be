@@ -79,6 +79,8 @@ const getAllOrders = async (userId, value, page, limit) => {
             }
         });
 
+        console.log(user)
+
         // only admin can access this route
         if (user.role_id !== 1) {
             return {

@@ -25,6 +25,7 @@ db.plans = require("./plans.model.js")(sequelize, Sequelize);
 db.cart = require('./cart.model.js')(sequelize, Sequelize);
 db.order = require('./order.model.js')(sequelize, Sequelize);
 db.orderDetails = require('./orderDetails.model.js')(sequelize, Sequelize);
+db.reviews = require('./reviews.model.js')(sequelize, Sequelize);
 
 // relation between users and roles
 db.user.belongsTo(db.roles, { foreignKey: "role_id" });
@@ -50,5 +51,8 @@ db.orderDetails.belongsTo(db.order, {foreignKey: "order_id"});
 db.orderDetails.belongsTo(db.plans, {foreignKey: "plan_id"});
 db.plans.hasMany(db.orderDetails, {foreignKey: "plan_id"});
 
+// relation between order reviews and users
+db.reviews.belongsTo(db.user, {foreignKey: "user_id"});
+db.user.hasMany(db.reviews, {foreignKey: "user_id"});
 
 module.exports = db;
